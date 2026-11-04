@@ -16,6 +16,9 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
+    # Berkas latihan adalah skrip belajar yang memang memakai print,
+    # jadi tidak ikut aturan lint aplikasi.
+    - latihan/**
 include: package:flutter_lints/flutter.yaml
 
 linter:

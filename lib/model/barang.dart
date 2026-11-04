@@ -8,9 +8,11 @@ class Barang {
   Barang({
     required this.kode,
     required this.nama,
+    // Parameter publik sengaja dipisah dari field privat.
     required double hargaSatuan,
     this.satuan = 'pcs',
     this.beratKg = 0,
+    // ignore: prefer_initializing_formals
   }) : _hargaSatuan = hargaSatuan;
 
   /// Konstruktor bernama untuk data hasil pemindaian kode barang.

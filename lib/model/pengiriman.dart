@@ -20,7 +20,9 @@ class Pengiriman {
     required this.jumlah,
     required this.tanggalKirim,
     required this.pelanggan, // Ditambahkan ke konstruktor utama
+    // Parameter publik sengaja dipisah dari field privat _status.
     String status = 'Draft',
+    // ignore: prefer_initializing_formals
   }) : _status = status;
 
   /// Konstruktor bernama untuk pengiriman baru hari ini.
