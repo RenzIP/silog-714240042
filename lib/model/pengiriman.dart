@@ -40,6 +40,9 @@ class Pengiriman {
 
   double get nilaiBarang => barang.nilaiTotal(jumlah);
 
+  /// Total berat seluruh barang pada pengiriman ini (kilogram).
+  double get beratTotal => barang.beratKg * jumlah;
+
   void ubahStatus(String statusBaru) {
     const urutan = [
       'Draft',

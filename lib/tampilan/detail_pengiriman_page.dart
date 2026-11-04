@@ -23,6 +23,40 @@ class DetailPengirimanPage extends StatelessWidget {
     );
   }
 
+  /// Minta konfirmasi lewat AlertDialog sebelum data dihapus.
+  ///
+  /// Mengembalikan `true` ke halaman daftar sebagai tanda data dihapus.
+  Future<void> _konfirmasiHapus(BuildContext context) async {
+    final setuju = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          icon: const Icon(Icons.delete_forever_outlined),
+          title: const Text('Hapus pengiriman?'),
+          content: Text(
+            'Pengiriman ${pengiriman.resi} akan dihapus dari daftar. '
+            'Tindakan ini tidak dapat dibatalkan.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Batal'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Hapus'),
+            ),
+          ],
+        );
+      },
+    );
+
+    // Dialog ditutup dengan Batal / tombol back: jangan hapus apa pun.
+    if (setuju != true || !context.mounted) return;
+
+    Navigator.pop(context, true);
+  }
+
   @override
   Widget build(BuildContext context) {
     final tgl = pengiriman.tanggalKirim;
@@ -43,6 +77,7 @@ class DetailPengirimanPage extends StatelessWidget {
             _baris('Status', pengiriman.status),
             _baris('Gudang Asal', pengiriman.asal.nama),
             _baris('Kota Tujuan', pengiriman.kotaTujuan),
+            _baris('Penerima', pengiriman.pelanggan.nama),
             _baris('Tanggal Kirim', '${tgl.day}/${tgl.month}/${tgl.year}'),
             const SizedBox(height: 16),
             Text(
@@ -53,6 +88,15 @@ class DetailPengirimanPage extends StatelessWidget {
             _baris('Kode Barang', pengiriman.barang.kode),
             _baris('Nama Barang', pengiriman.barang.nama),
             _baris('Jumlah', '${pengiriman.jumlah} ${pengiriman.barang.satuan}'),
+            _baris(
+              'Berat Barang',
+              '${pengiriman.barang.beratKg.toStringAsFixed(1)} kg / '
+                  '${pengiriman.barang.satuan}',
+            ),
+            _baris(
+              'Total Berat',
+              '${pengiriman.beratTotal.toStringAsFixed(1)} kg',
+            ),
             _baris('Nilai Barang', 'Rp${pengiriman.nilaiBarang.toStringAsFixed(0)}'),
             const SizedBox(height: 24),
             SizedBox(
@@ -61,6 +105,18 @@ class DetailPengirimanPage extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.arrow_back),
                 label: const Text('Kembali ke Daftar'),
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => _konfirmasiHapus(context),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.error,
+                ),
+                icon: const Icon(Icons.delete_outline),
+                label: const Text('Hapus Pengiriman'),
               ),
             ),
           ],
